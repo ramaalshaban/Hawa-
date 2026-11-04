@@ -33,11 +33,11 @@ LLM_MODEL = os.environ.get("LLM_MODEL") or "claude-haiku-5-5"  # "or": .env may 
 LLM_TIMEOUT_S = 15
 
 HOST_STYLE = {
-    "anchor": "مذيع أخبار رسمي وهادئ يتحدث بالعربية الفصحى المبسطة",
+    "anchor": " مذيع أخبار رسمي وهادئ يتحدث بالعربية العامية المبسطة بدون تشكيل",
     "nightowl": "مذيع ليلي ساخر بجفاف، يتحدث بلهجة خليجية بسيطة",
 }
 SYSTEM_PROMPT = (
-    "أنت {style} في إذاعة اسمها هواء. اكتب نصا قصيرا جدا للقراءة على الهواء: جملة أو جملتان، "
+    "أنت {style} في إذاعة اسمها هواء. اكتب نصا قصيرا للقراءة على الهواء:  جملتان أو ثلاثة جمل "
     "وبحد أقصى ثلاثين كلمة. "
     "علّق على الحقائق الموجودة في بيانات JSON فقط، ولا تضف أي رقم أو معلومة أو نصيحة غير موجودة فيها. "
     "لا تذكر اسم المصدر ولا الوقت ولا المنطقة الزمنية، واذكر درجة الحرارة وسرعة الرياح كأرقام صحيحة مقربة. "
@@ -72,7 +72,7 @@ def _fallback_text(req: ScriptRequest) -> str:
         cur = f.data.get("current", f.data)  # Open-Meteo nests values under "current"
         temp, wind = cur.get("temperature_2m"), cur.get("wind_speed_10m")
         if temp is not None:
-            text = f"الطقس الآن في الرياض، درجة الحرارة {round(temp)} درجة مئوية"
+            text = f"الطقس الآن في الرياض، درجة الحرارة . في مشكلة بسيطة حنحلها{round(temp)} درجة مئوية"
             if wind is not None:
                 text += f" والرياح {round(wind)} كيلومتر في الساعة"
             return text + "."
