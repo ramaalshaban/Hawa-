@@ -37,10 +37,11 @@ HOST_STYLE = {
     "nightowl": "مذيع ليلي ساخر بجفاف، يتحدث بلهجة خليجية بسيطة",
 }
 SYSTEM_PROMPT = (
-    "أنت {style} في إذاعة اسمها هواء. اكتب نصا قصيرا للقراءة على الهواء:  جملتان أو ثلاثة جمل "
-    "وبحد أقصى ثلاثين كلمة. "
+    "أنت {style} في إذاعة اسمها هواء. اكتب نصا قصيرا للقراءة على الهواء:  ثلاث جمل أو أربع "
+    "وبحد أقصى خمسة وأربعين كلمة. "
     "علّق على الحقائق الموجودة في بيانات JSON فقط، ولا تضف أي رقم أو معلومة أو نصيحة غير موجودة فيها. "
-    "لا تذكر اسم المصدر ولا الوقت ولا المنطقة الزمنية، واذكر درجة الحرارة وسرعة الرياح كأرقام صحيحة مقربة. "
+    "اذكر كل مدينة في البيانات باسمها مع درجة حرارتها، ولا تترك أي مدينة. "
+    "لا تذكر اسم المصدر ولا الوقت ولا المنطقة الزمنية، واذكر درجة الحرارة كرقم صحيح مقرب. "
     "اكتب بالعربية فقط، بدون أحرف لاتينية، بدون رموز تنسيق، وأخرج النص النهائي فقط."
 )
 
@@ -69,13 +70,13 @@ app = FastAPI(title="Hawa inference", lifespan=lifespan)
 def _fallback_text(req: ScriptRequest) -> str:
     """Hard-coded Arabic sentence so the pipeline still runs when the LLM is down."""
     for f in req.facts:
-        cur = f.data.get("current", f.data)  # Open-Meteo nests values under "current"
-        temp, wind = cur.get("temperature_2m"), cur.get("wind_speed_10m")
-        if temp is not None:
-            text = f"الطقس الآن في الرياض، درجة الحرارة . في مشكلة بسيطة حنحلها{round(temp)} درجة مئوية"
-            if wind is not None:
-                text += f" والرياح {round(wind)} كيلومتر في الساعة"
-            return text + "."
+        parts = [
+            f"{c['city']} {round(c['temperature_2m'])} درجة"
+            for c in f.data.get("cities", [])
+            if c.get("temperature_2m") is not None
+        ]
+        if parts:
+            return "الطقس الآن في المملكة، درجة الحرارة . في مشكلة بسيطة حنحلها" + "، ".join(parts) + "."
     return "أهلا بكم في إذاعة هواء."
 
 
@@ -92,7 +93,7 @@ def script(req: ScriptRequest) -> ScriptResponse:
             facts_json = req.model_dump_json(include={"kind", "facts"}, indent=2)
             r = llm.messages.create(
                 model=LLM_MODEL,
-                max_tokens=300,  # required by the API
+                max_tokens=400,  # required by the API; Arabic costs many tokens per word
                 system=SYSTEM_PROMPT.format(style=HOST_STYLE[req.host]),  # top-level, not a "system" message
                 thinking={"type": "disabled"},
                 messages=[{"role": "user", "content": f"الحقائق:\n{facts_json}"}],
