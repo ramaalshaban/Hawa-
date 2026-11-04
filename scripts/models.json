@@ -1,0 +1,13 @@
+{
+  "models": [
+    {"key": "tts",       "id": "facebook/mms-tts-ara",                                             "task": "text-to-speech",          "optional": false},
+    {"key": "asr",       "id": "Systran/faster-whisper-small",                                     "task": "asr",                     "optional": false},
+    {"key": "embedding", "id": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",      "task": "feature-extraction",      "optional": false},
+    {"key": "zeroshot",  "id": "MoritzLaurer/mDeBERTa-v3-base-xnli-multilingual-nli-2mil7",        "task": "zero-shot-classification","optional": false},
+    {"key": "en_ar",     "id": "Helsinki-NLP/opus-mt-en-ar",                                       "task": "translation",             "optional": true},
+    {"key": "ar_en",     "id": "Helsinki-NLP/opus-mt-ar-en",                                       "task": "translation",             "optional": true},
+    {"key": "summarize", "id": "csebuetnlp/mT5_multilingual_XLSum",                                "task": "summarization",           "optional": true},
+    {"key": "music",     "id": "facebook/musicgen-small",                                          "task": "text-to-audio",           "optional": true},
+    {"key": "ast",       "id": "MIT/ast-finetuned-audioset-10-10-0.4593",                          "task": "audio-classification",    "optional": true}
+  ]
+}
