@@ -1,0 +1,16 @@
+# Python 3.11, CPU only. Install torch first from the CPU index:
+#   pip install torch --index-url https://download.pytorch.org/whl/cpu
+# then: pip install -r requirements.txt
+fastapi==0.162.0
+uvicorn[standard]==0.54.0
+transformers==5.22.1
+sentence-transformers==6.2.0
+faster-whisper==1.2.1
+silero-vad==6.2.3
+huggingface_hub==2.4.0
+soundfile==0.14.0
+numpy==2.4.6
+scipy==1.17.1
+num2words==0.5.14
+sentencepiece==0.2.2  # tokenizers for Marian (opus-mt) and mT5
+anthropic==2.4.0  # hosted script-writing LLM
