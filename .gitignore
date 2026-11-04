@@ -35,3 +35,5 @@ coverage/
 
 # Docker / deploy local overrides
 docker-compose.override.yml
+
+/docs
